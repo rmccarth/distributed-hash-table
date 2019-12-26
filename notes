@@ -1,0 +1,16 @@
+*******
+*Chord*
+*******
+
+Distributed Hash Table (DHT)
+
+h ( ip, port)
+
+***********************
+*Non-scalable Solution*
+***********************
+
+1) create a few peers, take their fake ip and port and hash to assign IDs
+2) create a fake file.
+3) hash the table and store it in its proper hash tabled based on the hash ( id >= k )
+ 
