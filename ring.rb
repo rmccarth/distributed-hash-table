@@ -3,43 +3,35 @@
 require 'digest'
 require 'colorize'
 
+class Node
+    def name(ip, port)
+        @ip = ip
+        @port = port
+        hostname = @ip + @port
+        hostname = Digest::SHA2.new(512).hexdigest hostname #SHA2 512-hash to get a unique hostname and truncate to first 10 char
+        puts "naming our node: " + hostname[0...10].green
+        uniqueID = hostname[0...10]
+    end
+end
+
 class Ring
-    def initialize (ringDictionary)
-        @ringDictionary = ringDictionary
+    def initialize
+        @ringDictionary = {}                             #create our empty dictionary to store pairs of uniqueID:nodeObject
     end
-
-    def getRing
-        return @ringDictionary
+    def register(uniqueID, nodeObject)
+        @uniqueID = uniqueID
+        @nodeObject = nodeObject
+        @ringDictionary[@uniqueID] = @nodeObject        #store the nodeObject at location "uniqueID"
     end
-
-    def register (ip, port)
-        begin
-            @ip = ip
-            @port = port
-            puts "#{@ip} signaled for registation at port: #{@port}".blue
-            hostname = @ip + @port
-            uniqueID = Digest::SHA2.new(512).hexdigest hostname
-            puts ("successfully created hostname #{uniqueID[0...10]}!").green
-            puts "...registering"
-            truncated_uniqueID = uniqueID[0...10]
-            puts "*** registered #{truncated_uniqueID} ***".green
-            puts "assigning the host a place on the ring".blue
-            @ringDictionary[truncated_uniqueID] = @ringDictionary.size + 1
-        end
-        rescue
-            puts "failure to register with the ring, exiting".red 
-            raise
-        end
-    end
-
-ring = Ring.new({'host1':'abcd'})
-puts ring.getRing
-
-ring.register('10.10.10.10', '4444')
-puts ring.getRing
+    attr_reader :ringDictionary
+end
 
 
 
+ring = Ring.new()
+node = Node.new()
+uniqueID = node.name("10.10.10.10", "1203")             #name our node
 
 
-
+ring.register(uniqueID, node)                           # register our node with the ring
+puts(ring.ringDictionary)
