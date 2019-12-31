@@ -14,6 +14,7 @@ class Node
     end
 end
 
+
 class Ring
     def initialize
         @ringDictionary = {}                             #create our empty dictionary to store pairs of uniqueID:nodeObject
@@ -23,6 +24,12 @@ class Ring
         @nodeObject = nodeObject
         @ringDictionary[@uniqueID] = @nodeObject        #store the nodeObject at location "uniqueID"
     end
+    
+    def getNode(nodeID)
+        @nodeID = nodeID
+        puts(@ringDictionary[@nodeID])
+    end
+    
     attr_reader :ringDictionary
 end
 
@@ -35,3 +42,13 @@ uniqueID = node.name("10.10.10.10", "1203")             #name our node
 
 ring.register(uniqueID, node)                           # register our node with the ring
 puts(ring.ringDictionary)
+
+node = Node.new()
+uniqueID = node.name("10.10.10.20", "4444")
+ring.register(uniqueID, node)
+
+ring.getNode(uniqueID)                                 #can now cal ring.getNode and provide it a uniqueID to retrieve a node object
+
+
+
+
